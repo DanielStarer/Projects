@@ -1,0 +1,67 @@
+---
+title: "Weather Data Analysis"
+author: "Daniel Starer"
+date: "2025-07-24"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+upd: "2025-07-25"
+---
+
+A bit of context first.  This data originates from Zaruhi Avagyan on Kaggle
+and no information was provided by the creator regarding what locale
+it originates from.  The data, nonetheless, is very detailed and I wanted to
+visualize the correlation between humidity and precipitation and temperature and precipitation.
+
+First, we will load the dataset.
+```{r}
+my_weather <- read.csv("weather.csv")
+```
+
+Next, to best show correlation, we will need to use ggplot2, so we'll load that library.
+```{r}
+library(ggplot2)
+```
+
+Now, let's take a look at the data to get a sense of the data's structure.
+```{r}
+head(my_weather)
+```
+
+There are multiple columns for humidity and temperature because there are two times
+in which humidity and temperature were recorded: 9 AM and 3 PM.  Because of this, we
+will need to do some cleaning to organize things a bit.  We can achieve this by
+combining the data in both humidity columns and the data in both temperature
+columns and averaging them out to find the average temperature and humidity.
+
+```{r}
+my_weather$AvgHumidity <- rowMeans(my_weather[, c("Humidity9am", "Humidity3pm")], na.rm = TRUE)
+my_weather$AvgTemp <- rowMeans(my_weather[, c("Temp9am", "Temp3pm")], na.rm = TRUE)
+AvgHumidity <- my_weather$AvgHumidity
+AvgTemp <- my_weather$AvgTemp
+```
+
+Now that we have separated the average humidity and average temperature into their
+own objects, we can create an object for rainfall and test the correlation between
+these objects with linear models.
+```{r}
+Rainfall <- my_weather$Rainfall
+```
+
+```{r}
+plot(AvgHumidity, Rainfall, pch = 16, col = "blue", main = "Rainfall plotted against Average Humidity", xlab = "Avg. Humidity", ylab = "Rainfall")
+lm(Rainfall ~ AvgHumidity)
+abline(lm(Rainfall ~ AvgHumidity))
+```
+
+```{r}
+plot(AvgTemp, Rainfall, pch = 16, col = "blue", main = "Rainfall plotted against Average Temperature", xlab = "Avg. Temp.", ylab = "Rainfall")
+lm(Rainfall ~ AvgTemp)
+abline(lm(Rainfall ~ AvgTemp))
+```
+
+From these visualizations, we can see there is a general correlation between humidity and rainfall
+and temperature and rainfall, however there are a fair amount of outliers.  Instances where
+there is no recorded rainfall especially conforms more to the humidity and temperature.
+
