@@ -1,0 +1,4 @@
+Credit to Kelvin Obiri on Kaggle for the dataset.
+
+Can be found here: https://www.kaggle.com/datasets/kelvinobiri/credit-card-transactions
+
