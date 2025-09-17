@@ -78,7 +78,7 @@ set.seed(123)
 fit <- tree(isFraud ~ ., data = train, split = "gini")
 summary(fit)
 plot(fit)
-text(pruned_tree, pretty = 0)
+text(fit, pretty = 0)
 ```
 
 We can see from this result that there are 97 terminal nodes with a residual mean
